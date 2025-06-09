@@ -33,6 +33,21 @@ async function checkBlock() {
       lastNotified = height;
       document.getElementById("notifySound").play();
       alert("📢 BTC 区块高度已达提醒点：" + height);
+
+      await fetch("https://wxpusher.zjiecode.com/api/send/message", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    appToken: "AT_jZEHbpWkOMVJIGA71l2GfIb4tC5Qp6td",  // 你的 WxPusher appToken
+    content: `📢 BTC 区块已达高度：${height}`,
+    summary: "BTC 区块提醒",
+    contentType: 1,
+    uids: ["UID_y3B2fzWDNHjlCaMXMOqAQt9LGzvH"]     // 你的 UID
+  })
+}).then(res => res.json())
+  .then(data => console.log("✅ WxPusher response:", data))
+  .catch(err => console.error("❌ WxPusher 发送失败:", err));
+
     }
   } catch (e) {
     console.error("获取数据失败", e);
